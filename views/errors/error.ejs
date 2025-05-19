@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../partials/head') %>
+
+<body>
+    <div id="wrapper">
+        <%- include('../partials/header') %>
+        <%- include('../partials/navigation') %>
+
+        <main>
+            <h1><%= title %></h1>
+            
+            <div class="error-message">
+                <p><%- message %></p>
+                <img src="/images/site/error-404.gif" alt="Funny error illustration" style="max-width: 300px; margin: 20px auto; display: block;">
+                <p>Don't panic! Try refreshing the page or <a href="/">returning home</a>.</p>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</body>
+</html>
