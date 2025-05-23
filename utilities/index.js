@@ -57,7 +57,7 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
-async function buildDetailHTML(vehicle) {
+Util.buildDetailHTML = async function(vehicle) {
   const html = `
   <div class="detail-container">
       <div class="detail-image">
@@ -84,4 +84,4 @@ async function buildDetailHTML(vehicle) {
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
-module.exports = { getNav, buildClassificationGrid, buildDetailHTML}
+module.exports = Util
