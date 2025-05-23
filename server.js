@@ -38,7 +38,7 @@ app.use(async (req, res, next) => {
 * Place after all other middleware
 *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav();
+  let nav = await Util.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
   if(err.status == 404){
     res.status(404).render("errors/error", {
