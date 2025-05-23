@@ -57,6 +57,26 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
+async function buildDetailHTML(vehicle) {
+  const html = `
+  <div class="detail-container">
+      <div class="detail-image">
+        <img src="${vehicle.inv_image}" alt="${vehicle.inv_make} ${vehicle.inv_model}">
+      </div>
+      <div class="detail-info">
+        <h2>${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}</h2>
+        <p class="price">Price: $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</p>
+        <p><strong>Mileage:</strong> ${new Intl.NumberFormat('en-US').format(vehicle.inv_miles)} miles</p>
+        <p><strong>Color:</strong> ${vehicle.inv_color}</p>
+        <div class="description">
+          <h3>Description:</h3>
+          <p>${vehicle.inv_description}</p>
+        </div>
+      </div>
+    </div>
+  `;
+  return html;
+}
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
@@ -64,4 +84,4 @@ Util.buildClassificationGrid = async function(data){
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
-module.exports = Util
+module.exports = { getNav, buildClassificationGrid, buildDetailHTML}

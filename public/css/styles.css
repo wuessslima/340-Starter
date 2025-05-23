@@ -258,6 +258,35 @@ footer {
   padding: 1rem;
 }
 
+* Detail View Styles */
+.detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.detail-image {
+  flex: 1 1 400px;
+}
+
+.detail-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.detail-info {
+  flex: 1 1 400px;
+}
+
+.price {
+  font-size: 1.5rem;
+  color: #c00;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
 /* Media query for larger screens */
 @media (min-width: 768px) {
   nav ul {
@@ -331,5 +360,9 @@ footer {
     padding: 1rem;
     margin: 0.8rem 0;
     font-size: 1.2rem;
+  }
+
+  .detail-container {
+    flex-direction: column;
   }
 }
