@@ -422,6 +422,68 @@ footer {
     background: #218838;
 }
 
+/* Validation Styles */
+input:required:invalid {
+    border-left: 4px solid #ff0000;
+}
+
+input:required:valid {
+    border-left: 4px solid #28a745;
+}
+
+.password-requirements {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 0.9rem;
+}
+
+.password-requirements ul {
+    margin: 5px 0 0 20px;
+    padding-left: 0;
+}
+
+.password-requirements li {
+    list-style-type: disc;
+}
+
+.password-requirements {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 0.9rem;
+}
+
+.password-requirements ul {
+    margin: 5px 0 0 20px;
+    padding-left: 0;
+}
+
+.password-requirements li {
+    list-style-type: disc;
+}
+
+input:required:invalid {
+    border-left: 4px solid #ff0000;
+}
+
+input:required:valid {
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
 /* Media query for larger screens */
 @media (min-width: 768px) {
   nav ul {

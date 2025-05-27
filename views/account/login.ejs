@@ -9,14 +9,37 @@
             <%- messages() %>
 
             <!-- Login Form -->
-            <form action="/account/login" method="post" class="login-form">
+            <form action="/account/login" method="post" class="login-form" novalidate>
                 <div class="form-group">
                     <label for="email">Email Address:</label>
-                    <input type="email" id="email" name="email" required>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="account_email" 
+                        required
+                        placeholder="Enter your registered email"
+                    >
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="account_password" 
+                        required
+                        pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{12,}$"
+                        title="Must be at least 12 characters with 1 uppercase, 1 number, and 1 special character"
+                        placeholder="Enter your password"
+                    >
+                    <div class="password-requirements">
+                        <p><strong>Password Requirements:</strong></p>
+                        <ul>
+                            <li>Minimum 12 characters</li>
+                            <li>At least 1 uppercase letter (A-Z)</li>
+                            <li>At least 1 number (0-9)</li>
+                            <li>At least 1 special character (!@#$%^&*)</li>
+                        </ul>
+                    </div>
                 </div>
                 <button type="submit" class="btn-submit">Login</button>
             </form>
