@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+
+<body>
+    <main>
+        <section class="login-container">
+            <h1><%= title %></h1>
+            <%- messages() %>
+
+            <!-- Login Form -->
+            <form action="/account/login" method="post" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-submit">Login</button>
+            </form>
+
+            <!-- Registration Link -->
+            <div class="register-link">
+                <p>Don't have an account? <a href="/account/register">Register here</a>.</p>
+            </div>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>
