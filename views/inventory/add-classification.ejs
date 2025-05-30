@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body>
+    <%- include('../partials/header') %>
+    <main>
+        <section class="form-container">
+            <h1><%= title %></h1>
+            <%- messages() %>
+            
+            <form action="/inv/add-classification" method="post">
+                <div class="form-group">
+                    <label for="classification_name">Classification Name:</label>
+                    <input 
+                        type="text" 
+                        name="classification_name" 
+                        id="classification_name" 
+                        required 
+                        pattern="^[a-zA-Z0-9]+$"
+                        title="No spaces or special characters allowed">
+                </div>
+                <button type="submit" class="btn-submit">Add Classification</button>
+            </form>
+        </section>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

@@ -20,9 +20,15 @@ Util.getNav = async function (req, res, next) {
             "</a>"
         list += "</li>"
     })
+    
+    // Add Admin link if user is logged in and is an admin
+    if (req && req.session.user && req.session.user.account_type === 'Admin') {
+        list += '<li><a href="/inv/" title="Inventory Management">Management</a></li>'
+    }
+    
     list += "</ul>"
     return list
-}
+};
 
 /* **************************************
 * Build the classification view HTML
@@ -77,6 +83,25 @@ Util.buildDetailHTML = async function(vehicle) {
   `;
   return html;
 }
+
+/* **************************************
+* Build the classification select list
+* ************************************ */
+Util.buildClassificationList = async function (classification_id = null) {
+  let data = await invModel.getClassifications();
+  let list = '<select name="classification_id" id="classificationList" required>';
+  list += "<option value=''>Choose a Classification</option>";
+  data.rows.forEach((row) => {
+    list += `<option value="${row.classification_id}"`;
+    if (classification_id != null && row.classification_id == classification_id) {
+      list += " selected";
+    }
+    list += `>${row.classification_name}</option>`;
+  });
+  list += "</select>";
+  return list;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 

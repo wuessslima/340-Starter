@@ -3,6 +3,7 @@
 const utilities = require(".")
 const { body, validationResult } = require("express-validator")
 const validate = {}
+const accountModel = require("../models/account-model")
 
 /* **********************************
  *  Registration Data Validation Rules
@@ -15,9 +16,7 @@ validate.registrationRules = () => {
       .escape()
       .notEmpty()
       .isLength({ min: 1 })
-      .withMessage("Please provide a first name.")
-      .isAlpha()
-      .withMessage("First name must contain only letters"),
+      .withMessage("Please provide a first name."),
 
     // Last name validation
     body("account_lastname")
@@ -25,18 +24,22 @@ validate.registrationRules = () => {
       .escape()
       .notEmpty()
       .isLength({ min: 2 })
-      .withMessage("Please provide a last name.")
-      .isAlpha()
-      .withMessage("Last name must contain only letters"),
+      .withMessage("Please provide a last name."),
 
-    // Email validation
+    // Email validation (exatamente como pedido)
     body("account_email")
       .trim()
       .escape()
       .notEmpty()
       .isEmail()
       .normalizeEmail()
-      .withMessage("A valid email is required."),
+      .withMessage("A valid email is required.")
+      .custom(async (account_email) => {
+        const emailExists = await accountModel.checkExistingEmail(account_email)
+        if (emailExists) {
+          throw new Error("Email exists. Please log in or use different email")
+        }
+      }),
 
     // Password validation
     body("account_password")
@@ -64,7 +67,9 @@ validate.checkRegData = async (req, res, next) => {
       title: "Registration",
       nav,
       errors: errors.array(),
-      inputData: req.body
+      account_firstname: req.body.account_firstname, // Dados sticky
+      account_lastname: req.body.account_lastname,   // Dados sticky
+      account_email: req.body.account_email          // Dados sticky
     })
   }
   next()
