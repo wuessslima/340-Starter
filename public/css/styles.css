@@ -649,6 +649,83 @@ input:required:valid {
     font-size: 1.25rem;
 }
 
+.management-view {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.welcome-message {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.actions ul {
+    list-style: none;
+    padding: 0;
+}
+
+.actions li {
+    margin: 0.5rem 0;
+}
+
+.actions a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* Inventory Management Styles */
+.inventory-table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+}
+
+.inventory-table th, 
+.inventory-table td {
+  padding: 0.5rem;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.inventory-table th {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.inventory-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.btn-modify, 
+.btn-delete {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-modify {
+  background-color: #3498db;
+}
+
+.btn-modify:hover {
+  background-color: #2980b9;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+}
+
 /* Media query for larger screens */
 @media (min-width: 768px) {
   nav ul {

@@ -1,28 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('../partials/head') %>
-<body>
+  <%- include('../partials/head') %>
+  <body>
     <main>
-        <section class="management-container">
-            <h1><%= title %></h1>
-            
-            <% if (typeof messages === 'function') { %>
-                <%- messages() %>
-            <% } else if (messages) { %>
-                <div class="flash-messages">
-                    <% Object.keys(messages).forEach(type => { %>
-                        <% messages[type].forEach(message => { %>
-                            <div class="alert alert-<%= type %>"><%= message %></div>
-                        <% }) %>
-                    <% }) %>
-                </div>
-            <% } %>
+      <section class="management-container">
+        <h1><%= title %></h1>
 
-            <div class="management-links">
-                <a href="/inv/add-classification" class="btn">Add New Classification</a>
-                <a href="/inv/add-inventory" class="btn">Add New Inventory</a>
-            </div>
-        </section>
+        <% if (typeof messages === 'function') { %> <%- messages() %> <% } else
+        if (messages) { %>
+        <div class="flash-messages">
+          <% Object.keys(messages).forEach(type => { %> <%
+          messages[type].forEach(message => { %>
+          <div class="alert alert-<%= type %>"><%= message %></div>
+          <% }) %> <% }) %>
+        </div>
+        <% } %>
+
+        <div class="management-links">
+          <a href="/inv/add-classification" class="btn"
+            >Add New Classification</a
+          >
+          <a href="/inv/add-inventory" class="btn">Add New Inventory</a>
+        </div>
+      </section>
+      <h2>Manage Inventory</h2>
+      <p>Select a classification to see inventory items:</p>
+      <%- classificationSelect %>
+
+      <div id="inventoryDisplay"></div>
+
+      <noscript>
+        <p class="notice">JavaScript must be enabled to use this page.</p>
+      </noscript>
+
+      <script src="/js/inventory.js"></script>
     </main>
-</body>
+  </body>
 </html>
