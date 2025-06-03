@@ -13,8 +13,8 @@ router.get("/type/:classificationId", Util.handleErrors(invController.buildByCla
 router.get("/detail/:inventoryId", Util.handleErrors(invController.buildByInventoryId));
 
 // Management routes
-router.get("/", Util.handleErrors(invController.buildManagement));
-router.get("/add-classification", Util.handleErrors(invController.buildAddClassification));
+router.get("/", Util.checkAuthorization, Util.handleErrors(invController.buildManagement));
+router.get("/add-classification", Util.checkAuthorization, Util.handleErrors(invController.buildAddClassification));
 router.get("/add-inventory", Util.handleErrors(invController.buildAddInventory));
 
 // Process the new classification data
@@ -50,5 +50,17 @@ router.post("/update",
   invValidate.inventoryRules(),
   invValidate.checkUpdateData,
   Util.handleErrors(invController.updateInventory))
+
+  /* ***************************
+ * Build delete confirmation view
+ * ************************** */
+router.get("/delete/:inv_id",
+  Util.handleErrors(invController.buildDeleteConfirmView))
+
+/* ***************************
+ * Process inventory deletion
+ * ************************** */
+router.post("/delete",
+  Util.handleErrors(invController.deleteInventoryItem))
 
 module.exports = router;

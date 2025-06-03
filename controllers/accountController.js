@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
+const accountController = {};
+
 /* ****************************************
 *  Deliver login view
 * *************************************** */
@@ -122,17 +124,87 @@ async function accountLogin(req, res) {
  * ************************************ */
 async function buildManagement(req, res, next) {
     try {
-        let nav = await utilities.getNav();
-        res.render("account/management", {
-            title: "Account Management",
-            nav,
-            accountData: res.locals.accountData, // Dados do usuário do JWT
-            errors: null
+        if (!res.locals.accountData) {
+      throw new Error("User data not available");
+    }
+    
+    let nav = await utilities.getNav();
+    res.render("account/management", {
+      title: "Account Management",
+      nav,
+      accountData: res.locals.accountData,
+      errors: null
         });
     } catch (error) {
         error.status = 500;
         next(error);
     }
+}
+
+/* ***************************
+ * Build account update view
+ * ************************** */
+accountController.buildUpdateView = async function (req, res, next) {
+  const account_id = parseInt(req.params.account_id)
+  const accountData = await accountModel.getAccountById(account_id)
+  
+  res.render("account/update", {
+    title: "Update Account",
+    accountData,
+    errors: null
+  })
+}
+
+/* ***************************
+ * Update account information
+ * ************************** */
+accountController.updateAccount = async function (req, res, next) {
+  const { account_id, account_firstname, account_lastname, account_email } = req.body
+  
+  const updateResult = await accountModel.updateAccount(
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email
+  )
+
+  if (updateResult) {
+    req.flash("notice", "Account updated successfully.")
+    res.redirect("/account/")
+  } else {
+    req.flash("notice", "Account update failed.")
+    res.redirect(`/account/update/${account_id}`)
+  }
+}
+
+/* ***************************
+ * Update password
+ * ************************** */
+accountController.updatePassword = async function (req, res, next) {
+  const { account_id, account_password } = req.body
+  const hashedPassword = await bcrypt.hash(account_password, 10)
+  
+  const updateResult = await accountModel.updatePassword(
+    account_id,
+    hashedPassword
+  )
+
+  if (updateResult) {
+    req.flash("notice", "Password updated successfully.")
+    res.redirect("/account/")
+  } else {
+    req.flash("notice", "Password update failed.")
+    res.redirect(`/account/update/${account_id}`)
+  }
+}
+
+/* ***************************
+ * Process logout request
+ * ************************** */
+accountController.logout = async function (req, res, next) {
+  res.clearCookie("jwt")
+  req.flash("notice", "You have been logged out.")
+  res.redirect("/")
 }
 
 module.exports = { buildLogin, buildRegister, registerAccount, buildManagement, accountLogin }

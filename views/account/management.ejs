@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('../partials/head') %>
-<body>
+  <%- include('../partials/head') %>
+  <body>
     <main>
-        <section class="management-view">
-            <h1>Account Management</h1>
-            <%- messages() %> <!-- Exibe mensagens flash -->
-            
-            <div class="welcome-message">
-                <p>Welcome back, <strong><%= accountData.account_firstname %></strong>!</p>
-                <p>Email: <%= accountData.account_email %></p>
-                <p>Account Type: <%= accountData.account_type %></p>
-            </div>
+      <section class="management-view">
+        <h1>Account Management</h1>
+        <%- messages() %>
+        <!-- Exibe mensagens flash -->
 
-            <div class="actions">
-                <h2>Actions:</h2>
-                <ul>
-                    <li><a href="/account/update">Update Account</a></li>
-                    <li><a href="/account/logout">Logout</a></li>
-                </ul>
-            </div>
-        </section>
+        <div class="welcome-message">
+          <h2>Welcome <%= accountData.account_firstname %></h2>
+
+          <% if (accountData.account_type === 'Employee' ||
+          accountData.account_type === 'Admin') { %>
+          <h3>Inventory Management</h3>
+          <p><a href="/inv/">Manage Inventory</a></p>
+          <% } %>
+
+          <p>
+            <a href="/account/update/<%= accountData.account_id %>"
+              >Update Account Information</a
+            >
+          </p>
+        </div>
+
+        <div class="actions">
+          <h2>Actions:</h2>
+          <ul>
+            <li><a href="/account/update">Update Account</a></li>
+            <li><a href="/account/logout">Logout</a></li>
+          </ul>
+        </div>
+      </section>
     </main>
-</body>
+  </body>
 </html>

@@ -1,0 +1,34 @@
+<!-- Main content -->
+<h1><%= title %></h1>
+<%- messages() %>
+
+<!-- Account Update Form -->
+<form id="updateAccountForm" action="/account/update" method="post">
+  <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+  
+  <div class="form-group">
+    <label for="account_firstname">First Name:</label>
+    <input type="text" name="account_firstname" id="account_firstname" required
+           value="<%= accountData.account_firstname %>">
+  </div>
+  
+  <!-- Similar fields for last name and email -->
+  
+  <button type="submit">Update Account</button>
+</form>
+
+<!-- Password Change Form -->
+<form action="/account/update-password" method="post">
+  <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+  
+  <div class="form-group">
+    <label for="account_password">New Password:</label>
+    <input type="password" name="account_password" id="account_password" required
+           pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{12,}$">
+    <p>Password must be at least 12 characters with 1 uppercase, 1 number, and 1 special character</p>
+  </div>
+  
+  <button type="submit">Change Password</button>
+
+  
+</form>

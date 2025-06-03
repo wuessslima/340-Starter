@@ -27,14 +27,27 @@ router.post("/login",
 // Process the login attempt
 router.get(
   "/",
+  utilities.checkJWTToken,
   utilities.checkLogin,
   utilities.handleErrors(accountController.buildManagement)
 );
 
-router.get(
-  "/",
-  utilities.checkJWTToken,
-  utilities.handleErrors(accountController.buildManagement)
-);
+
+// Update account routes
+router.get("/update/:account_id",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildUpdateView))
+  
+router.post("/update",
+  regValidate.updateRules(),
+  regValidate.checkUpdateData,
+  utilities.handleErrors(accountController.updateAccount))
+
+router.post("/update-password",
+  regValidate.passwordRules(),
+  regValidate.checkPasswordData,
+  utilities.handleErrors(accountController.updatePassword))
+
+  router.get("/logout", utilities.handleErrors(accountController.logout))
 
 module.exports = router;

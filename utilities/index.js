@@ -146,37 +146,57 @@ Util.handleErrors = (fn) => (req, res, next) =>
 /* ****************************************
  * Middleware to check token validity
  **************************************** */
-Util.checkJWTToken = (req, res, next) => {
-  if (req.cookies.jwt) {
-    jwt.verify(
-      req.cookies.jwt,
-      process.env.ACCESS_TOKEN_SECRET,
-      function (err, accountData) {
-        if (err) {
-          req.flash("Please log in");
-          res.clearCookie("jwt");
-          return res.redirect("/account/login");
-        }
-        res.locals.accountData = accountData;
-        res.locals.loggedin = 1;
-        next();
-      }
-    );
-  } else {
+Util.checkJWTToken = async (req, res, next) => {
+  // Lista de rotas públicas que não requerem autenticação
+  const publicRoutes = ['/account/login', '/account/register', '/'];
+  
+  if (publicRoutes.includes(req.path)) {
+    return next();
+  }
+
+  try {
+    if (!req.cookies.jwt) {
+      return res.redirect('/account/login');
+    }
+
+    const decoded = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+    res.locals.accountData = decoded;
+    res.locals.loggedin = 1;
     next();
+  } catch (error) {
+    console.error('JWT Error:', error.message);
+    res.clearCookie('jwt');
+    return res.redirect('/account/login');
   }
 };
 
 /* ****************************************
  *  Check Login
  * ************************************ */
- Util.checkLogin = (req, res, next) => {
+Util.checkLogin = (req, res, next) => {
   if (res.locals.loggedin) {
-    next()
+    next();
   } else {
-    req.flash("notice", "Please log in.")
-    return res.redirect("/account/login")
+    req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
   }
- }
- 
+};
+
+/* ***************************
+ * Check if user is authorized (Employee or Admin)
+ * ************************** */
+Util.checkAuthorization = (req, res, next) => {
+  if (
+    res.locals.accountData?.account_type === "Employee" ||
+    res.locals.accountData?.account_type === "Admin"
+  ) {
+    return next();
+  }
+  req.flash(
+    "notice",
+    "You must be logged in as an employee or admin to access this page."
+  );
+  res.redirect("/account/login");
+};
+
 module.exports = Util;
