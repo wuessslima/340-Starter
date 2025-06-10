@@ -1,0 +1,26 @@
+<section class="vehicle-reviews-section" id="vehicle-reviews">
+  <h3 class="vehicle-reviews-title">Customer Reviews</h3>
+  
+  <% if (reviews.length > 0) { %>
+    <div class="vehicle-reviews-list">
+      <% reviews.forEach(review => { %>
+        <div class="vehicle-review-card" id="review-<%= review.review_id %>">
+          <div class="review-meta">
+            <span class="reviewer-name"><%= review.account_firstname %> <%= review.account_lastname %></span>
+            <span class="review-date"><%= new Date(review.review_date).toLocaleDateString() %></span>
+            <div class="review-stars">
+              <% for (let i = 0; i < 5; i++) { %>
+                <span class="<%= i < review.review_rating ? 'star-filled' : 'star-empty' %>">★</span>
+              <% } %>
+            </div>
+          </div>
+          <div class="review-text">
+            <%= review.review_text %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="no-reviews-message">No reviews yet for this vehicle.</p>
+  <% } %>
+</section>

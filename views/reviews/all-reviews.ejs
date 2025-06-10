@@ -1,0 +1,36 @@
+<%- include('../partials/head', { title: 'All Approved Reviews' }) %>
+<body>
+  
+  <main class="all-reviews-container">
+    <h1 class="all-reviews-title">All Approved Reviews</h1>
+    
+    <%- include('../partials/messages') %>
+
+    <section class="reviews-grid" id="approved-reviews-list">
+      <% reviews.forEach(review => { %>
+        <article class="review-card" id="review-<%= review.review_id %>">
+          <div class="review-header">
+            <span class="review-author">
+              <%= review.account_firstname %> <%= review.account_lastname %>
+            </span>
+            <span class="review-date">
+              <%= new Date(review.review_date).toLocaleDateString() %>
+            </span>
+          </div>
+          
+          <div class="review-rating">
+            <% for(let i=0; i<5; i++) { %>
+              <span class="<%= i < review.review_rating ? 'star-filled' : 'star-empty' %>">★</span>
+            <% } %>
+          </div>
+          
+          <div class="review-content">
+            <%= review.review_text %>
+          </div>
+        </article>
+      <% }) %>
+    </section>
+  </main>
+
+</body>
+</html>

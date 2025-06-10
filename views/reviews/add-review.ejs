@@ -1,0 +1,31 @@
+<%- include('../partials/head', { title: title }) %>
+<body>
+  
+  <main class="review-form-container">
+    <h1 class="review-form-title"><%= title %></h1>
+    
+    <%- include('../partials/messages') %>
+
+    <form action="/reviews/add" method="post" class="review-form" id="review-form">
+      <input type="hidden" name="inv_id" value="<%= inv_id %>">
+      
+      <div class="review-form-group">
+        <label for="review-rating-select" class="review-form-label">Rating:</label>
+        <select name="review_rating" id="review-rating-select" class="review-form-select" required>
+          <% [1,2,3,4,5].forEach(rating => { %>
+            <option value="<%= rating %>"><%= '★'.repeat(rating) %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="review-form-group">
+        <label for="review-text-area" class="review-form-label">Review:</label>
+        <textarea name="review_text" id="review-text-area" class="review-form-textarea" rows="5" required></textarea>
+      </div>
+
+      <button type="submit" class="review-submit-btn" id="submit-review-btn">Submit Review</button>
+    </form>
+  </main>
+
+</body>
+</html>

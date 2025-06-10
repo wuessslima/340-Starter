@@ -2,6 +2,7 @@ const invModel = require("../models/inventory-model");
 const utilities = require("../utilities/");
 const classValidate = require("../utilities/classification-validation");
 const invValidate = require("../utilities/inventory-validation");
+const reviewModel = require('../models/review-models');
 
 const invCont = {};
 
@@ -24,6 +25,7 @@ invCont.buildByClassificationId = async function (req, res, next) {
 invCont.buildByInventoryId = async function (req, res, next) {
   const inv_id = req.params.inventoryId;
   const data = await invModel.getInventoryById(inv_id);
+  const reviews = await reviewModel.getApprovedReviews(inv_id);
   const grid = await utilities.buildDetailHTML(data);
   let nav = await utilities.getNav();
   const vehicleName = `${data.inv_make} ${data.inv_model}`;
@@ -31,6 +33,8 @@ invCont.buildByInventoryId = async function (req, res, next) {
     title: vehicleName,
     nav,
     grid,
+    data,
+    reviews: reviews.rows
   });
 };
 

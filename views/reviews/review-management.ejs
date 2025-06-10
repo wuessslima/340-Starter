@@ -1,0 +1,48 @@
+<%- include('../partials/head', { title: 'Review Management' }) %>
+<body>
+  
+  <main class="management-container">
+    <h1 class="management-title">Review Management</h1>
+    
+    <%- include('../partials/messages') %>
+    
+    <% if (reviews.length > 0) { %>
+      <table class="pending-reviews-table" id="pending-reviews-table">
+        <thead>
+          <tr>
+            <th class="vehicle-col">Vehicle</th>
+            <th class="rating-col">Rating</th>
+            <th class="review-col">Review</th>
+            <th class="date-col">Date</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% reviews.forEach(review => { %>
+            <tr class="pending-review" id="pending-review-<%= review.review_id %>">
+              <td><%= review.inv_make %> <%= review.inv_model %></td>
+              <td>
+                <div class="rating-stars">
+                  <% for (let i = 0; i < 5; i++) { %>
+                    <span class="<%= i < review.review_rating ? 'star-filled' : 'star-empty' %>">★</span>
+                  <% } %>
+                </div>
+              </td>
+              <td><%= review.review_text %></td>
+              <td><%= new Date(review.review_date).toLocaleDateString() %></td>
+              <td>
+                <form action="/reviews/approve/<%= review.review_id %>" method="post" class="approve-form">
+                  <button type="submit" class="approve-btn" id="approve-btn-<%= review.review_id %>">Approve</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="no-pending-message">No pending reviews at this time.</p>
+    <% } %>
+  </main>
+
+</body>
+</html>

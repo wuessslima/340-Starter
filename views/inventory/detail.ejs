@@ -1,9 +1,29 @@
 <% if (title) { %>
-<h1><%= title %></h1>
+<h1 class="vehicle-title"><%= title %></h1>
 <% } else {
   res.redirect('/')
 } %>
 
-<%# messages() %>
-
 <%- grid %>
+
+<section class="reviews-section">
+  <h2 class="reviews-section-title">Customer Reviews</h2>
+  
+  <% if (typeof reviews !== 'undefined' && reviews.length > 0) { %>
+    <%- include('../reviews/vehicle-reviews', {vehicleData: data, reviews: reviews}) %>
+  <% } else { %>
+    <p class="no-reviews-message">No reviews yet. Be the first to review!</p>
+  <% } %>
+
+  <div class="review-actions">
+    <% if (locals.loggedin) { %>
+      <a href="/reviews/add/<%= data.inv_id %>" class="review-btn" id="add-review-btn">
+        ✍️ Add Review
+      </a>
+    <% } else { %>
+      <a href="/account/login" class="review-btn secondary" id="login-to-review-btn">
+        🔒 Log in to review
+      </a>
+    <% } %>
+  </div>
+</section>

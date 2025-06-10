@@ -2,82 +2,112 @@
  * This server.js file is the primary file of the 
  * application. It is used to control the project.
  *******************************************/
+
 /* ***********************
  * Require Statements
  *************************/
-const express = require("express")
-const expressLayouts = require("express-ejs-layouts")
-const env = require("dotenv").config()
-const app = express()
-const static = require("./routes/static")
-const baseController = require("./controllers/baseController")
-const accountRoute = require("./routes/accountRoute")
-const inventoryRoute = require("./routes/inventoryRoute")
-const Util = require("./utilities/")
-const session = require("express-session")
-const pool = require('./database/')
-const bodyParser = require("body-parser")
-const cookieParser = require("cookie-parser")
-
+const express = require("express");
+const expressLayouts = require("express-ejs-layouts");
+const env = require("dotenv").config();
+const app = express();
+const session = require("express-session");
+const pool = require('./database/');
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const flash = require('connect-flash');
 
 /* ***********************
- * Middleware
- * ************************/
+ * Local Variables
+ *************************/
+const static = require("./routes/static");
+const baseController = require("./controllers/baseController");
+const accountRoute = require("./routes/accountRoute");
+const inventoryRoute = require("./routes/inventoryRoute");
+const reviewRoute = require("./routes/reviewRoute");
+const Util = require("./utilities/");
+
+/* ***********************
+ * Middleware Configuration
+ *************************/
+// Session configuration (optimized)
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
     pool,
+    pruneSessionInterval: 60 * 60 // Cleanup every hour
   }),
   secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
+  resave: false, // Changed from true to reduce queries
+  saveUninitialized: false, // Changed from true for security
   name: 'sessionId',
-}))
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production'
+  }
+}));
 
-// Add these right after your session middleware setup
-app.use(require('connect-flash')());
+// Flash messages
+app.use(flash());
 app.use((req, res, next) => {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
 
+// Body parsers
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Cookie parser
+app.use(cookieParser());
+
+// Static files
 app.use(express.static('public'));
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
-app.use(cookieParser())
-
-app.use(Util.checkJWTToken)
+// JWT token check
+app.use(Util.checkJWTToken);
 
 /* ***********************
- * View Engine and Templates
+ * View Engine Configuration
  *************************/
-app.set("view engine", "ejs")
-app.use(expressLayouts)
-app.set("layout", "./layouts/layout")
+app.set("view engine", "ejs");
+app.use(expressLayouts);
+app.set("layout", "./layouts/layout");
+
 /* ***********************
- * Routes
+ * Route Definitions
+ * IMPORTANT: Order matters!
  *************************/
-app.use(static)
-// Index route
-app.get("/",Util.handleErrors(baseController.buildHome))
-// Inventory routes
-app.use("/inv", inventoryRoute)
+// Static routes
+app.use(static);
+
 // Account routes
-app.use("/account", require("./routes/accountRoute"))
-// File Not Found Route - must be last route in list
-app.use(async (req, res, next) => {
-  next({status: 404, message: 'Sorry, we appear to have lost that page.'})
-})
+app.use("/account", accountRoute);
+
+// Inventory routes
+app.use("/inv", inventoryRoute);
+
+// Review routes (must come before error handlers)
+app.use("/reviews", reviewRoute);
+
+// Home route
+app.get("/", Util.handleErrors(baseController.buildHome));
 
 /* ***********************
-* Express Error Handler
-* Place after all other middleware
-*************************/
+ * Error Handlers
+ * MUST be last middleware
+ *************************/
+// 404 Not Found handler
+app.use(async (req, res, next) => {
+  next({ status: 404, message: 'Sorry, we appear to have lost that page.' });
+});
+
+// Main error handler
 app.use(async (err, req, res, next) => {
   let nav = await Util.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-  if(err.status == 404){
+  
+  if (err.status == 404) {
     res.status(404).render("errors/error", {
       title: '404 - Not Found',
       message: err.message,
@@ -93,15 +123,12 @@ app.use(async (err, req, res, next) => {
 });
 
 /* ***********************
- * Local Server Information
- * Values from .env (environment) file
+ * Server Initialization
  *************************/
-const port = process.env.PORT
-const host = process.env.HOST
+const port = process.env.PORT || 5500;
+const host = process.env.HOST || 'localhost';
 
-/* ***********************
- * Log statement to confirm server operation
- *************************/
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`)
-})
+  console.log(`Server running at http://${host}:${port}`);
+  console.log(`Review routes available at /reviews`);
+});
